@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+Thumbs.db
+*.egg-info/
+dist/
+build/
+.env
+~$*
+
+# 本地会话与 scratch
+.grill-with-docs-ui/
+.scratch/
+*.log
