@@ -60,7 +60,8 @@ npx --yes skills@latest add <本仓库地址或本地路径> --skill grill-with-
 
 frontier ≥ 2 时，Agent 会打开本地表单：主题与轮次在页眉，每题可预选「推荐」项，底部提交本轮答案。提交后本轮只读，答案返回 Agent **仅继续澄清需求**，不会执行实现任务。
 
-![Grill with docs UI 澄清表单](assets/qa/clarification-form.png)
+![Grill with docs UI 澄清表单1](assets/qa/cursor-form.png)
+![Grill with docs UI 澄清表单2](assets/qa/clarification-form.png)
 
 ### 怎么触发
 
