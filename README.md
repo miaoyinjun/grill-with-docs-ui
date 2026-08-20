@@ -12,7 +12,7 @@
 | --- | --- | --- |
 | 仓库形态 | `skills/ask-ui/` 等多样本 | 根目录即 `grill-with-docs-ui` skill |
 | Skill 定位 | 通用多题表单适配器 | **proxy `grill-with-docs`**：执行 grilling + domain-modeling |
-| CLI / 数据目录 | `ask-ui.mjs`、`.ask-ui/` | `grill-with-docs-ui.mjs`、`.grill-with-docs-ui/` |
+| CLI / 数据目录 | `ask-ui.mjs`、`.ask-ui/` | `grill-with-docs-ui.mjs`、`.scratch/grill-with-docs-ui/` |
 | 打开浏览器 | 默认打开系统浏览器（`--no-open` 关闭） | **默认不打开**；需显式 `--open`（便于 Agent 内置浏览器） |
 | 题号 | 每轮从 Q1 起算 | **跨轮连续编号** |
 | 提交文案 | 通用「返回 Agent / 已提交」 | 强调**只澄清、不执行实现** |

@@ -324,6 +324,24 @@ try {
   assert.equal(directBundle.rounds[0].deliveryMode, 'direct');
   assert.equal(directBundle.rounds[1].status, 'submitted');
   assert.equal(directBundle.session.wakeState, undefined);
+
+  const defaultCwd = path.join(temporaryRoot, 'default-cwd');
+  await fs.mkdir(defaultCwd);
+  await new Promise((resolve, reject) => {
+    const child = spawn(process.execPath, [GRILL_WITH_DOCS_UI_SCRIPT, 'help'], {
+      cwd: defaultCwd,
+      stdio: 'ignore',
+      windowsHide: true,
+    });
+    child.once('error', reject);
+    child.once('exit', (code) => {
+      if (code === 0) resolve();
+      else reject(new Error(`help exited ${code}`));
+    });
+  });
+  await fs.access(path.join(defaultCwd, '.scratch', 'grill-with-docs-ui', '.gitignore'));
+  await assert.rejects(fs.access(path.join(defaultCwd, '.grill-with-docs-ui')));
+
   process.stdout.write('grill-with-docs-ui self-test passed\n');
 } finally {
   if (server) await new Promise((resolve) => server.close(resolve));

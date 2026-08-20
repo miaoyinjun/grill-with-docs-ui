@@ -19,6 +19,7 @@ const APP_ROOT = path.join(SKILL_ROOT, 'assets', 'app');
 const SCHEMA_VERSION = '1.0';
 const MAX_BODY_BYTES = 1_048_576;
 const OTHER_OPTION_ID = '__other__';
+const DEFAULT_DATA_DIR = path.join('.scratch', 'grill-with-docs-ui');
 
 function now() {
   return new Date().toISOString();
@@ -105,12 +106,15 @@ async function atomicWriteJson(file, value) {
 async function ensureDataRoot(requested, cwd = process.cwd()) {
   const primary = requested
     ? path.resolve(requested)
-    : path.join(path.resolve(cwd), '.grill-with-docs-ui');
+    : path.join(path.resolve(cwd), DEFAULT_DATA_DIR);
 
   try {
     await fs.mkdir(primary, { recursive: true });
     await fs.access(primary, fsConstants.W_OK);
-    if (path.basename(primary) === '.grill-with-docs-ui') {
+    if (
+      path.basename(primary) === 'grill-with-docs-ui'
+      && path.basename(path.dirname(primary)) === '.scratch'
+    ) {
       const ignoreFile = path.join(primary, '.gitignore');
       if (!existsSync(ignoreFile)) {
         await fs.writeFile(ignoreFile, '*\n!.gitignore\n', 'utf8');

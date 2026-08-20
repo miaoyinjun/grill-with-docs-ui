@@ -10,6 +10,5 @@ build/
 ~$*
 
 # 本地会话与 scratch
-.grill-with-docs-ui/
 .scratch/
 *.log
