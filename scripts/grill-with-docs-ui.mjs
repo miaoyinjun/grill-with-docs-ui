@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { constants as fsConstants, createReadStream, existsSync } from 'node:fs';
+import { constants as fsConstants, createReadStream, existsSync, realpathSync } from 'node:fs';
 import fs from 'node:fs/promises';
 import http from 'node:http';
 import os from 'node:os';
@@ -1030,9 +1030,20 @@ export async function main(argv = process.argv.slice(2)) {
   help();
 }
 
-const isMain = process.argv[1]
-  && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url;
-if (isMain) {
+/** argv 与 import.meta.url 可能在 symlink/junction 两侧（如 .cursor/skills ↔ .skills-manager/skills） */
+function isMainModule(metaUrl, argvPath) {
+  if (!argvPath) {
+    return false;
+  }
+  try {
+    return realpathSync.native(path.resolve(argvPath))
+      === realpathSync.native(fileURLToPath(metaUrl));
+  } catch {
+    return pathToFileURL(path.resolve(argvPath)).href === metaUrl;
+  }
+}
+
+if (isMainModule(import.meta.url, process.argv[1])) {
   main().catch((error) => {
     process.stderr.write(`${JSON.stringify({ error: error.message })}\n`);
     process.exitCode = 1;
