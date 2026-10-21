@@ -1,4 +1,4 @@
 interface:
   display_name: "Grill with docs UI"
-  short_description: "proxy grill-with-docs：grilling+domain-modeling，多题表单；仅澄清落文档"
-  default_prompt: "Use $grill-with-docs-ui as the grill-with-docs proxy: run grilling + domain-modeling; frontier ≥2 via local form; after submit continue the loop until frontier is empty — clarification and CONTEXT/ADR only."
+  short_description: "带文档 grilling 的浏览器表单版：frontier ≥2 用本地表单至 frontier 空"
+  default_prompt: "Use $grill-with-docs-ui as the grill-with-docs proxy: run grilling + domain-modeling; frontier ≥2 via local form; after submit continue until frontier is empty — clarification and docs only."

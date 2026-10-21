@@ -1,120 +1,66 @@
 # Grill with docs UI JSON protocol
 
+UTF-8 JSON. Fields not listed here are ignored unless otherwise stated.
+QuestionSet shape: [example-question-set.json](example-question-set.json).
+
 ## QuestionSet
 
-Use UTF-8 JSON. Fields not listed here are ignored unless otherwise stated.
+| Field | Required | Notes |
+|---|---|---|
+| `schemaVersion` | no | `"1.0"` when set |
+| `sessionId` | no | Omit on new task; CLI generates. Reuse for follow-up rounds |
+| `sessionTitle` | yes | Session label |
+| `sessionSummary` | yes | Session purpose |
+| `roundNumber` | no | CLI generates when omitted |
+| `title` | yes | Round title |
+| `purpose` | yes | Round purpose |
+| `basedOnRound` | no | Prior round number for follow-ups; `null` on first |
+| `wake` | no | `{ mode, provider, sessionRef, cwd }`; default manual |
+| `questions` | yes | Non-empty array of question objects |
 
-```json
-{
-  "schemaVersion": "1.0",
-  "sessionId": "optional-existing-session-id",
-  "sessionTitle": "个人工作台需求确认收集",
-  "sessionSummary": "收集个人工作台的目标、模块和交互需求",
-  "roundNumber": 1,
-  "title": "基础需求确认",
-  "purpose": "确认工作台的核心目标",
-  "basedOnRound": null,
-  "wake": {
-    "mode": "manual",
-    "provider": null,
-    "sessionRef": null,
-    "cwd": null
-  },
-  "questions": []
-}
-```
+### Question (all types)
 
-The CLI generates `sessionId` and `roundNumber` when omitted. Reuse `sessionId` for follow-up rounds.
+| Field | Required | Notes |
+|---|---|---|
+| `id` | yes | Stable id within the round |
+| `type` | yes | `single` \| `multiple` \| `text` |
+| `title` | yes | |
+| `description` | no | |
+| `required` | no | Default true |
 
-### Single choice
+### `single` / `multiple`
 
-```json
-{
-  "id": "q1",
-  "type": "single",
-  "title": "首页结构",
-  "description": "选择一种主要组织方式。",
-  "required": true,
-  "options": [
-    {
-      "id": "dashboard",
-      "label": "仪表盘",
-      "description": "集中展示核心状态"
-    }
-  ],
-  "recommendedOptionIds": ["dashboard"],
-  "recommendationReason": "更适合快速查看整体状态",
-  "allowOther": true
-}
-```
+| Field | Required | Notes |
+|---|---|---|
+| `options` | yes | `{ id, label, description? }[]` |
+| `recommendedOptionIds` | no | Pre-selected option ids |
+| `recommendationReason` | no | Why those ids |
+| `allowOther` | no | Enables reserved `__other__` answer id |
+| `minSelections` / `maxSelections` | no | `multiple` only |
 
-### Multiple choice
+### `text`
 
-```json
-{
-  "id": "q2",
-  "type": "multiple",
-  "title": "首期模块",
-  "description": "选择首期必须具备的模块。",
-  "required": true,
-  "minSelections": 1,
-  "maxSelections": 3,
-  "options": [
-    { "id": "tasks", "label": "任务", "description": "待办与进度" },
-    { "id": "notes", "label": "笔记", "description": "知识沉淀" }
-  ],
-  "recommendedOptionIds": ["tasks"],
-  "recommendationReason": "任务是工作台的主入口",
-  "allowOther": true
-}
-```
-
-### Free text
-
-```json
-{
-  "id": "q3",
-  "type": "text",
-  "title": "成功标准",
-  "description": "描述上线后的成功标准。",
-  "required": true,
-  "recommendedDraft": "每天可以在一个页面完成工作安排和回顾。",
-  "recommendationReason": "可直接观察和验证",
-  "multiline": true,
-  "maxLength": 2000
-}
-```
+| Field | Required | Notes |
+|---|---|---|
+| `recommendedDraft` | no | Pre-filled draft |
+| `recommendationReason` | no | |
+| `multiline` | no | Default true |
+| `maxLength` | no | Character cap |
 
 ## AnswerSet
 
-```json
-{
-  "schemaVersion": "1.0",
-  "submissionId": "submit-generated-id",
-  "sessionId": "personal-workbench-a7k2",
-  "roundNumber": 1,
-  "submittedAt": "2026-08-10T15:30:00.000Z",
-  "answers": [
-    {
-      "questionId": "q1",
-      "selectedOptionIds": ["dashboard"],
-      "customText": ""
-    },
-    {
-      "questionId": "q3",
-      "selectedOptionIds": [],
-      "customText": "每天使用至少两次。"
-    }
-  ]
-}
-```
+Stdout / `answers.json` after submit. Immutable after submission; corrections need a later Round.
 
-`answers.json` becomes immutable after submission. Create a later Round for corrections.
+| Field | Notes |
+|---|---|
+| `schemaVersion` | `"1.0"` |
+| `submissionId` | CLI-generated |
+| `sessionId` / `roundNumber` / `submittedAt` | Session binding |
+| `answers` | `{ questionId, selectedOptionIds, customText }[]` |
 
 ### Other option
 
-When a choice question has `allowOther: true`, store the selected “其他” option
-with the reserved id `__other__`. Supplementary text remains in `customText`:
+When `allowOther: true`, the “其他” choice uses reserved id `__other__`; supplementary text stays in `customText`:
 
 ```json
 {
@@ -124,9 +70,7 @@ with the reserved id `__other__`. Supplementary text remains in `customText`:
 }
 ```
 
-`__other__` is invalid when `allowOther` is false. For backward compatibility,
-an older answer with non-empty `customText` and no `__other__` id is still
-treated as an “其他” selection.
+`__other__` is invalid when `allowOther` is false. Older answers with non-empty `customText` and no `__other__` id still count as “其他”.
 
 ## Statuses
 
