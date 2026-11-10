@@ -64,6 +64,11 @@ function makeSessionId(title = 'grill-with-docs-ui') {
   return `${slug}-${stamp}-${randomBytes(2).toString('hex')}`;
 }
 
+/** Localhost capability token for access URLs (~16 chars, 96-bit). */
+function makeAccessToken() {
+  return randomBytes(12).toString('base64url');
+}
+
 function roundDirectory(dataRoot, sessionId, roundNumber) {
   return path.join(
     dataRoot,
@@ -720,7 +725,7 @@ async function triggerWake(dataRoot, sessionId, roundNumber) {
 
 export async function startHttpServer({
   dataRoot,
-  token = randomBytes(24).toString('hex'),
+  token = makeAccessToken(),
   port = 0,
   persistServerInfo = true,
   enableWake = true,
@@ -856,7 +861,7 @@ async function ensureServer(dataRoot) {
   const existing = await readJson(serverFile, null);
   if (await serverIsAlive(existing)) return existing;
 
-  const token = randomBytes(24).toString('hex');
+  const token = makeAccessToken();
   const child = spawn(
     process.execPath,
     [SCRIPT_FILE, 'serve', '--data-dir', dataRoot, '--port', '0', '--token', token],
@@ -1000,7 +1005,7 @@ export async function main(argv = process.argv.slice(2)) {
     const started = await startHttpServer({
       dataRoot,
       port: Number(args.port) || 0,
-      token: args.token || randomBytes(24).toString('hex'),
+      token: args.token || makeAccessToken(),
     });
     print(started.info);
     return new Promise(() => {});
