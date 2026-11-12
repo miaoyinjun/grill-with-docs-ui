@@ -895,9 +895,9 @@ function openBrowser(url) {
 }
 
 function shouldOpenSystemBrowser(args) {
-  // 默认不打开系统浏览器（由 Agent 用内置浏览器打开）；仅 --open 时打开系统浏览器。
+  // 给人填表：默认打开系统默认浏览器。无桌面 / CI 用 --no-open。
   if (args['no-open']) return false;
-  return Boolean(args.open);
+  return true;
 }
 
 async function readInput(inputFile) {
@@ -914,8 +914,8 @@ function print(value) {
 
 function help() {
   process.stdout.write(`Grill with docs UI\n\n`);
-  process.stdout.write(`  ask --input <file> [--data-dir <dir>] [--port <number>] [--open]\n`);
-  process.stdout.write(`  create --input <file> [--data-dir <dir>] [--open] [--no-serve]\n`);
+  process.stdout.write(`  ask --input <file> [--data-dir <dir>] [--port <number>] [--no-open]\n`);
+  process.stdout.write(`  create --input <file> [--data-dir <dir>] [--no-open] [--no-serve]\n`);
   process.stdout.write(`  serve [--data-dir <dir>] [--port <number>] [--token <token>]\n`);
   process.stdout.write(`  resume [--session <id>] [--data-dir <dir>]\n`);
   process.stdout.write(`  status --session <id> [--data-dir <dir>]\n`);

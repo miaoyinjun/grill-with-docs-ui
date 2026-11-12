@@ -20,12 +20,11 @@ node "$env:USERPROFILE\.cursor\skills\grill-with-docs-ui\scripts\grill-with-docs
 
 仓库已 vendoring `.agents/skills/grill-with-docs-ui/` 时，把上式里的脚本换成该相对路径。
 
+无桌面 / CI：加 `--no-open`（self-test 已如此）。
+
 ## 打开表单页
 
-在**已把完整 URL 写进对用户回复**之后再打开（打开失败不撤销「已贴 URL」）。
-
-- **Cursor browser**：`browser_navigate` 到该 URL（若工具支持 `position: "active"` 则用之）。
-- **ego-browser**：`page.goto(url)`；用户要填表时 `handOff()`，结束本轮打开步骤。用户控制中勿自行 `takeOver`；其回复「继续」后再接管。
+给人填表：`ask` / `create` **默认**用系统默认浏览器打开 ready URL（Windows `rundll32` url handler、macOS `open`、Linux `xdg-open`）。Agent 只需起带监控的 `ask`/`create`，并把完整 URL 写进对用户回复；打开失败不撤销「已贴 URL」。
 
 ## Fallback 会话标记
 

@@ -20,7 +20,7 @@ npx --yes skills@latest add <本仓库地址或本地路径> --skill grill-with-
 /grill-with-docs-ui 澄清销售团队线索跟进流程
 ```
 
-一题仍在对话里答。两题及以上打开页面：推荐项已预选，可改选后点「提交本轮答案」。提交之后的澄清与落文档，与 grill-with-docs 相同。
+一题仍在对话里答。两题及以上由 `ask`/`create` 用**系统默认浏览器**打开本地表单：推荐项已预选，可改选后点「提交本轮答案」。无桌面环境加 `--no-open`。提交之后的澄清与落文档，与 grill-with-docs 相同。
 
 ![Grill with docs UI 澄清表单](assets/qa/cursor-form.png)
 ![Grill with docs UI 澄清表单（续）](assets/qa/clarification-form.png)
