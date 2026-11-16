@@ -24,8 +24,12 @@ node "$env:USERPROFILE\.cursor\skills\grill-with-docs-ui\scripts\grill-with-docs
 
 ## 打开表单页
 
-给人填表：`ask` / `create` **默认**用系统默认浏览器打开 ready URL（Windows `rundll32` url handler、macOS `open`、Linux `xdg-open`）。Agent 只需起带监控的 `ask`/`create`，并把完整 URL 写进对用户回复；打开失败不撤销「已贴 URL」。
+给人填表：`ask` / `create` **默认**用系统默认浏览器打开 ready URL（Windows `rundll32` url handler、macOS `open`、Linux `xdg-open`）。交链：起带监控的 `ask`/`create`，并把完整 URL 写进对用户回复；打开由 CLI 完成。打开失败不撤销「已贴 URL」。
+
+## 等 `ask` 提交（Present 未完成）
+
+ready / 交链之后，对**同一** `ask` Shell 任务 `AwaitShell` 直到进程退出（或流上出现 `has been submitted`）。Present 的完成条件是 AnswerSet 已解析，不是「已贴 URL」。`ask` 不要靠用户在聊天里打「提交了」来续跑；误结束 turn 后若收到该任务的完成通知，直接解析 stdout 续 Loop。
 
 ## Fallback 会话标记
 
-`create` 时除 URL 外，对用户回复含一行：`grill-with-docs-ui-session: <sessionId>`。用户说「已提交」后 `resume`。
+`create` 时除 URL 外，对用户回复含一行：`grill-with-docs-ui-session: <sessionId>`。`create` 不阻塞等提交；用户说「已提交」后 `resume`（仅此路径）。
